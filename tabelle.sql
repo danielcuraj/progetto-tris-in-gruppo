@@ -1,1 +1,14 @@
+CREATE TABLE giocatore(
+id_giocatore VARCHAR(50) PRIMARY KEY NOT NULL,
+cognome VARCHAR(50) NOT NULL,
+nome VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE partita(
+id_giocatore VARCHAR(50) PRIMARY KEY NOT NULL,
+  
+
+
+
+);
 
