@@ -127,9 +127,9 @@ def get_top_5_giocatori():
     try:
         with conn.cursor() as cursor:
             sql = """
-                SELECT g.cognome, g.nome, COUNT(*) as vittorie
-                FROM partita p
-                JOIN giocatore g ON (
+                SELECT g.cognome, g.nome, COUNT(p.id_partita) as vittorie
+                FROM partita g
+                LEFT JOIN giocatore p ON (
                     (p.vincitore = 'X' AND p.id_giocatoreX = g.id_giocatore) OR
                     (p.vincitore = 'O' AND p.id_giocatoreO = g.id_giocatore)
                 )
