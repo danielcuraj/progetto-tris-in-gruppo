@@ -100,7 +100,7 @@ def gioca_partita():
             mossa = int(input(f"Turno di {giocatore_corrente}. Inserisci posizione (0-8): "))
             
             if mossa < 0 or mossa > 8:
-                print("❌ Errore: il numero deve essere tra 0 e 8!")
+                print("Errore: il numero deve essere tra 0 e 8!")
                 continue
             
             if fai_mossa(scacchiera, mossa, giocatore_corrente):
@@ -109,19 +109,19 @@ def gioca_partita():
                 # Controllo vittoria
                 if ha_vinto(scacchiera, giocatore_corrente):
                     stampa_scacchiera(scacchiera)
-                    print(f"🎉 Complimenti! Il giocatore {giocatore_corrente} ha vinto!")
+                    print(f"Complimenti! Il giocatore {giocatore_corrente} ha vinto!")
                     return giocatore_corrente, scacchiera
                 
                 # Controllo pareggio
                 if scacchiera_piena(scacchiera):
                     stampa_scacchiera(scacchiera)
-                    print("🤝 Pareggio!")
+                    print("Pareggio!")
                     return "P", scacchiera
                 
                 # Cambio turno
                 giocatore_corrente = "O" if giocatore_corrente == "X" else "X"
             else:
-                print("❌ Cella già occupata! Riprova.")
+                print("Cella già occupata! Riprova.")
         
         except ValueError:
-            print("❌ Input non valido! Inserisci un numero intero.")
+            print("Input non valido! Inserisci un numero intero.")
