@@ -15,14 +15,6 @@ def get_connection():
     return pymysql.connect(**DB_CONFIG)
 
 def get_or_create_giocatore(nome):
-    parti = nome.strip().split()
-    if len(parti) >= 2:
-        nome = parti[-1]
-        
-    else:
-        nome = parti[0]
-        
-    
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
