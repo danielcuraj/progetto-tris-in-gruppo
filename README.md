@@ -1,22 +1,67 @@
-# Progetto gioco tris in gruppo
-TRIS
-Autori: Haka Osman, Curaj Daniel, Ceroni Jacopo
+# Tris Game (Python & MySQL)
 
-DESCRIZIONE
-Il progetto consiste in un’applicazione desktop del gioco del Tris realizzata in Python con interfaccia da terminale (CLI). Il software è strutturato in modo modulare, separando nettamente la logica di gioco (giocoTris.py), la gestione del database (conn_database.py) e il menu principale (main.py).
+---
 
-#Funzionamento del Gioco
-All'avvio di una nuova partita, il sistema richiede l'inserimento dei nomi dei due partecipanti (Giocatore X e Giocatore O). Il programma gestisce le mosse tramite coordinate numeriche da 0 a 8, corrispondenti alle celle della scacchiera.
-Validazione: Il software impedisce l'inserimento di mosse in celle già occupate o fuori dal range consentito.
-Controllo Vittoria: Al termine di ogni turno, vengono analizzate le 8 combinazioni vincenti (righe, colonne e diagonali).
-Esito: La partita termina con la vittoria di uno dei due giocatori o con un pareggio nel caso in cui la scacchiera venga completata senza un vincitore.
-Integrazione Database MySQL
-Il cuore del progetto è la persistenza dei dati. Tramite la libreria pymysql, il programma si connette a un database MariaDB/MySQL per memorizzare lo storico delle attività:
-Tabella giocatore: Registra l'anagrafica (ID, Cognome, Nome). Se un giocatore ha già giocato in passato, il sistema lo riconosce senza creare duplicati.
-Tabella partita: Memorizza ogni match giocato, associando gli ID dei giocatori al risultato finale e alla data corrente.
-Relazioni: Il sistema utilizza chiavi esterne per garantire l'integrità dei dati tra le tabelle.
-Analisi e Statistiche
-Oltre al gioco, il software permette di consultare i dati archiviati:
-Classifica Top 5: Una query SQL estrae i 5 giocatori con il maggior numero di vittorie totali.
-Statistiche Personali: Cercando un giocatore per nome, è possibile visualizzare il numero totale di partite giocate, vinte e perse, calcolando automaticamente il Win Rate percentuale (rapporto vittorie/partite totali).
+## Autori (Team)
+Il progetto è stato realizzato da:
+* **Haka Osman**
+* **Curaj Daniel**
+* **Ceroni Jacopo**
+
+---
+
+## Descrizione del Progetto
+Il software è strutturato in modo **modulare** per garantire una netta separazione tra la logica di gioco, la gestione dei dati e l'interfaccia utente. Consente di giocare a Tris tra due utenti locali, registrando ogni mossa e risultato su un database relazionale.
+
+### Architettura del Codice
+Il progetto è suddiviso in tre moduli principali:
+1.  **`giocoTris.py`**: Contiene la logica "pura" del gioco (gestione scacchiera, verifica vittoria e pareggio).
+2.  **`conn_database.py`**: Gestisce tutte le operazioni CRUD e la comunicazione con il database tramite la libreria `pymysql`.
+3.  **`main.py`**: Il punto di ingresso dell'applicazione che gestisce il menu principale e l'esperienza utente.
+
+---
+
+## Funzionalità Principali
+
+* **Gestione Giocatori**: Registrazione automatica dei nuovi giocatori o recupero dei profili esistenti per evitare duplicati.
+* **Logica di Gioco Robusta**:
+    * Validazione delle mosse (impedisce sovrascritture o input fuori range).
+    * Controllo istantaneo delle 8 combinazioni vincenti.
+* **Persistenza dei Dati**: Ogni partita viene salvata con data, ID dei giocatori e vincitore.
+* **Analisi e Statistiche**:
+    *  **Top 5**: Visualizzazione dei migliori 5 giocatori per numero di vittorie.
+    * **Statistiche Personali**: Calcolo automatico di partite giocate, vinte, perse e del **Win Rate (%)**.
+
+---
+
+##  Struttura del Database
+Il database è composto da due tabelle principali collegate tra loro:
+
+| Tabella | Descrizione |
+| :--- | :--- |
+| **`giocatore`** | Memorizza l'anagrafica (ID, Nome, Cognome). |
+| **`partita`** | Memorizza i match, collegando i giocatori tramite chiavi esterne (FK). |
+
+> [!TIP]
+> Il sistema utilizza chiavi esterne per garantire l'integrità dei dati: se un giocatore viene rimosso, il sistema protegge la coerenza dello storico.
+
+---
+
+##  Installazione e Utilizzo
+
+### 1. Prerequisiti
+Assicurati di avere installato:
+* **Python 3.x**
+* **MySQL** o **MariaDB**
+* Libreria `pymysql`:
+    ```bash
+    pip install pymysql
+    ```
+
+### 2. Setup del Database
+Esegui lo script SQL fornito (`tabelle.sql`) nel tuo client MySQL per creare la struttura necessaria:
+```sql
+-- Esempio di creazione tabelle
+CREATE TABLE giocatore (...);
+CREATE TABLE partita (...);
 
