@@ -5,7 +5,7 @@ Autori: Haka Osman, Curaj Daniel, Ceroni Jacopo
 DESCRIZIONE
 Il progetto consiste in un’applicazione desktop del gioco del Tris realizzata in Python con interfaccia da terminale (CLI). Il software è strutturato in modo modulare, separando nettamente la logica di gioco (giocoTris.py), la gestione del database (conn_database.py) e il menu principale (main.py).
 
-##Funzionamento del Gioco##
+#Funzionamento del Gioco
 All'avvio di una nuova partita, il sistema richiede l'inserimento dei nomi dei due partecipanti (Giocatore X e Giocatore O). Il programma gestisce le mosse tramite coordinate numeriche da 0 a 8, corrispondenti alle celle della scacchiera.
 Validazione: Il software impedisce l'inserimento di mosse in celle già occupate o fuori dal range consentito.
 Controllo Vittoria: Al termine di ogni turno, vengono analizzate le 8 combinazioni vincenti (righe, colonne e diagonali).
