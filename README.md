@@ -39,11 +39,8 @@ Il database è composto da due tabelle principali collegate tra loro:
 
 | Tabella | Descrizione |
 | :--- | :--- |
-| **`giocatore`** | Memorizza l'anagrafica (ID, Nome, Cognome). |
+| **`giocatore`** | Memorizza l'anagrafica (ID, Nome). |
 | **`partita`** | Memorizza i match, collegando i giocatori tramite chiavi esterne (FK). |
-
-> [!TIP]
-> Il sistema utilizza chiavi esterne per garantire l'integrità dei dati: se un giocatore viene rimosso, il sistema protegge la coerenza dello storico.
 
 ---
 
