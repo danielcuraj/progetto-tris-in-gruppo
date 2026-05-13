@@ -1,12 +1,6 @@
-"""
-Modulo per la gestione del database - Separato dalla logica di gioco
-Gestisce giocatori, partite e statistiche
-"""
-
 import pymysql
 from datetime import datetime
 
-# Configurazione della connessione al database
 DB_CONFIG = {
     "host": "127.0.0.1",
     "user": "4CTL_curaj.d.231108",
@@ -17,90 +11,46 @@ DB_CONFIG = {
     "connect_timeout": 5,
 }
 
-
 def get_connection():
-    """
-    Crea e restituisce una connessione al database.
-    """
     return pymysql.connect(**DB_CONFIG)
 
-
-# ==================== GESTIONE GIOCATORI ====================
-
-def get_or_create_giocatore(nome_cognome):
-    """
-    Restituisce l'ID del giocatore se esiste, altrimenti lo crea.
-    Il nome_cognome viene diviso in cognome e nome (ultimi due token).
-    
-    Args:
-        nome_cognome (str): Nome e cognome del giocatore (es: "Mario Rossi")
-    
-    Returns:
-        int: ID del giocatore
-    """
-    # Separa cognome e nome
-    parti = nome_cognome.strip().split()
+def get_or_create_giocatore(nome):
+    parti = nome.strip().split()
     if len(parti) >= 2:
-        nome = parti[-1]  # ultima parola
-        cognome = " ".join(parti[:-1])  # resto
+        nome = parti[-1]
+        
     else:
         nome = parti[0]
-        cognome = ""
+        
     
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
-            # Cerca il giocatore nel database
-            sql = "SELECT id_giocatore FROM giocatore WHERE cognome = %s AND nome = %s"
-            cursor.execute(sql, (cognome, nome))
+            sql = "SELECT id_giocatore FROM giocatore WHERE nome = %s"
+            cursor.execute(sql, (nome))
             result = cursor.fetchone()
             
             if result:
                 return result[0]
             else:
-                # Crea il nuovo giocatore
-                sql = "INSERT INTO giocatore (cognome, nome) VALUES (%s, %s)"
-                cursor.execute(sql, (cognome, nome))
+                sql = "INSERT INTO giocatore (nome) VALUES (%s)"
+                cursor.execute(sql, (nome))
                 conn.commit()
                 return cursor.lastrowid
     finally:
         conn.close()
 
-
 def get_giocatore_by_id(id_giocatore):
-    """
-    Restituisce i dati del giocatore dato l'ID.
-    
-    Args:
-        id_giocatore (int): ID del giocatore
-    
-    Returns:
-        tuple: (id, cognome, nome) o None se non trovato
-    """
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
-            sql = "SELECT id_giocatore, cognome, nome FROM giocatore WHERE id_giocatore = %s"
+            sql = "SELECT id_giocatore, nome FROM giocatore WHERE id_giocatore = %s"
             cursor.execute(sql, (id_giocatore,))
             return cursor.fetchone()
     finally:
         conn.close()
 
-
-# ==================== GESTIONE PARTITE ====================
-
 def salva_partita(id_giocatore_x, id_giocatore_o, vincitore):
-    """
-    Salva il risultato di una partita nel database.
-    
-    Args:
-        id_giocatore_x (int): ID del giocatore X
-        id_giocatore_o (int): ID del giocatore O
-        vincitore (str): "X", "O" per vittoria, "P" per pareggio
-    
-    Returns:
-        int: ID della partita creata
-    """
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
@@ -113,23 +63,14 @@ def salva_partita(id_giocatore_x, id_giocatore_o, vincitore):
     finally:
         conn.close()
 
-
-# ==================== STATISTICHE ====================
-
 def get_top_5_giocatori():
-    """
-    Restituisce i top 5 giocatori per numero di vittorie.
-    
-    Returns:
-        list: Lista di tuple (cognome, nome, vittorie)
-    """
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
             sql = """
-                SELECT g.cognome, g.nome, COUNT(p.id_partita) as vittorie
-                FROM partita g
-                LEFT JOIN giocatore p ON (
+                SELECT g.nome, COUNT(p.id_partita) as vittorie
+                FROM giocatore g
+                LEFT JOIN partita p ON (
                     (p.vincitore = 'X' AND p.id_giocatoreX = g.id_giocatore) OR
                     (p.vincitore = 'O' AND p.id_giocatoreO = g.id_giocatore)
                 )
@@ -142,41 +83,27 @@ def get_top_5_giocatori():
     finally:
         conn.close()
 
-
 def get_statistiche_giocatore(id_giocatore):
-    """
-    Restituisce le statistiche di un giocatore specifico.
-    
-    Args:
-        id_giocatore (int): ID del giocatore
-    
-    Returns:
-        dict: Dizionario con chiavi (partite_giocate, partite_vinte, partite_perse, win_rate)
-    """
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
-            # Partite giocate
             sql = """SELECT COUNT(*) FROM partita 
                      WHERE id_giocatoreX = %s OR id_giocatoreO = %s"""
             cursor.execute(sql, (id_giocatore, id_giocatore))
             partite_giocate = cursor.fetchone()[0]
             
-            # Partite vinte
             sql = """SELECT COUNT(*) FROM partita WHERE
                      (id_giocatoreX = %s AND vincitore = 'X') OR
                      (id_giocatoreO = %s AND vincitore = 'O')"""
             cursor.execute(sql, (id_giocatore, id_giocatore))
             partite_vinte = cursor.fetchone()[0]
             
-            # Partite perse (escluse i pareggi)
             sql = """SELECT COUNT(*) FROM partita WHERE
                      ((id_giocatoreX = %s AND vincitore = 'O') OR
                       (id_giocatoreO = %s AND vincitore = 'X'))"""
             cursor.execute(sql, (id_giocatore, id_giocatore))
             partite_perse = cursor.fetchone()[0]
             
-            # Calcola win rate
             win_rate = (partite_vinte / partite_giocate * 100) if partite_giocate > 0 else 0
             
             return {
