@@ -1,6 +1,5 @@
 CREATE TABLE giocatore(
 id_giocatore INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-cognome VARCHAR(50) NOT NULL,
 nome VARCHAR(50) NOT NULL
 );
 
