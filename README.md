@@ -1,4 +1,4 @@
-# progetto-tris-in-gruppo
+# Progetto gioco tris in gruppo
 TRIS
 Autori: Haka Osman, Curaj Daniel, Ceroni Jacopo
 
