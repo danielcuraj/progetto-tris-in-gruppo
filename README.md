@@ -41,24 +41,3 @@ Il database è composto da due tabelle principali collegate tra loro:
 | :--- | :--- |
 | **`giocatore`** | Memorizza l'anagrafica (ID, Nome). |
 | **`partita`** | Memorizza i match, collegando i giocatori tramite chiavi esterne (FK). |
-
----
-
-##  Installazione e Utilizzo
-
-### 1. Prerequisiti
-Assicurati di avere installato:
-* **Python 3.x**
-* **MySQL** o **MariaDB**
-* Libreria `pymysql`:
-    ```bash
-    pip install pymysql
-    ```
-
-### 2. Setup del Database
-Esegui lo script SQL fornito (`tabelle.sql`) nel tuo client MySQL per creare la struttura necessaria:
-```sql
--- Esempio di creazione tabelle
-CREATE TABLE giocatore (...);
-CREATE TABLE partita (...);
-
